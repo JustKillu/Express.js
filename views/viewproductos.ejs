@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Productos Disponibles</title>
+  </head>
+  <body>
+    <table>
+      <thead>
+        <tr>
+          <th>Productos</th>
+          <th>Cantidad</th>
+          <th>Precio</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for (let i = 0; i < productos.length; i++) { %>
+          <tr>
+            <td><%= productos[i].producto %></td>
+            <td><%= productos[i].cantidad %></td>
+            <td><%= productos[i].precio %></td>
+          </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </body>
+</html>
