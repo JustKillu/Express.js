@@ -50,8 +50,8 @@ class clientesController {
   
 
   
-    update(query , data){
-    return new Promise((resolve, reject) => {  
+  update(query , data){
+  return new Promise((resolve, reject) => {  
   const { id, Nombre, Apellido, Pais } = data;
   const sql = `UPDATE clientes SET nombre = '${Nombre}', apellido = '${Apellido}', pais = '${Pais}' WHERE id = ${query}`;
   con.query(sql, (error, result) => {

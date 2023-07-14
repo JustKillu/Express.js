@@ -1,51 +1,84 @@
-const {cuentas} = require("../models/cuentasModels");
+const con = require("../models/db")
 
 class cuentasController {
-    
-    check(){
-      console.log('Todos las cuentas: ')
-      return cuentas;
+   
+  todos() {
+    return new Promise((resolve, reject) => {
+      con.query("SELECT * FROM cuentas", function (error, results, fields) {
+        if (error) {
+          console.error(error);
+          reject(error);
+        } else {
+          console.log("Todos las cuentas son: ", results);
+          resolve(results);
+        }
+      });
+    });
+  }
+  
+   new(infodb) {
+    return new Promise((resolve, reject) => {
+      const { id, acreditador, saldo, estado } = infodb;
+  
+      const query = 'INSERT INTO cuentas (id, acreditador, saldo, estado) VALUES (?, ?, ?, ?)';
+      const values = [id,acreditador, saldo, estado];
+      con.query(query, values, (error, results) => {
+        if (error) {
+          console.error('Error al insertar datos:', error);
+          reject('Error al insertar datos en la base de datos');
+        } else {
+          console.log('Datos insertados correctamente');
+          resolve('Datos insertados correctamente');
+        }
+      });
+    });
+  }
+   
+  search(query) {
+    return new Promise((resolve, reject) => {
+      con.query(`SELECT * FROM cuentas WHERE id = '${query}'`, (error, results) => {
+        if (error) {
+          console.error('Error al ejecutar la consulta: ', error);
+          reject(error);
+        } else {
+          console.log('Resultados de la consulta: ', results);
+          resolve(results);
+        }
+      });
+    });
+  }
+  
+
+  
+    update(query , data){
+    return new Promise((resolve, reject) => {  
+  const { id, acreditador, saldo, estado} = data;
+  const sql = `UPDATE cuentas SET acreditador = '${acreditador}', saldo = '${saldo}', estado = '${estado}' WHERE id = ${query}`;
+  con.query(sql, (error, result) => {
+    if(error){
+      console.log('Hubo un error y no se pudo actualizar los datos')
+      reject(error);
+    }else{
+      console.log('Datos actualizados exitosamente');
+      resolve(result);
     }
-  
-    new(newCuenta){
-      cuentas.push(newCuenta);
-      console.log("Se ha creado una nuevo cuenta y se regresara la lista de las cuentas: ");
-      return (cuentas);
-    }
-  
-  
-    search(searchID){
-      var id = + searchID;
-      var search = cuentas.findIndex(u => u.id == id)
-      var res = "id: " + id + " pertenece a:  " + cuentas[search].acreditador;
-      return(res);
-    }
-  
-  
-    update(searchID , newCuenta){
-      var id = + searchID;
-      var search = cuentas.findIndex(u => u.id == id)
-      if (search == "-1" ){
-        console.log("La id que ha colocado: " + id + "No esta en la base de datos");
-      }else if(cuentas[search].id == id){ 
-        console.log("La cuenta con la id:  "+ id + "sera actualizado");
-        console.log(cuentas[search]);
-        cuentas[search]= newCuenta;
-        console.log("La cuenta ha sido actualizado");
-        console.log(cuentas[search]);
-      }
-    }
-  
-    delete(searchID){
-      var id = + searchID;
-      var search = cuentas.findIndex(u => u.id == id)
-      if (search == "-1" ){
-        console.log("La id que ha colocado: " + id + "No esta en la base de datos");
-      }else if(cuentas[search].id == id){
-        console.log("La id que ha colocado: " + id + "Ha sido elimnado.");
-        cuentas.splice(search,1);
-      }
-    }
+  })
+}) 
+}
+   
+delete(query){
+  return new Promise((resolve, reject) => {  
+const sql = `DELETE FROM cuentas WHERE id = ${query}`;
+con.query(sql, (error, result) => {
+  if(error){
+    console.log('Hubo un error y no se pudo eliminar los datos')
+    reject(error);
+  }else{
+    console.log('Datos borrados exitosamente');
+    resolve(result);
+  }
+})
+}) 
+}
   } 
-  
   module.exports = new cuentasController();

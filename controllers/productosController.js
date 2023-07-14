@@ -1,51 +1,83 @@
-const {productos} = require("../models/productosModels");
-
-class productosController {
+const con = require("../models/db")
+class productosController {    
+    todos() {
+      return new Promise((resolve, reject) => {
+        con.query("SELECT * FROM productos", function (error, results, fields) {
+          if (error) {
+            console.error(error);
+            reject(error);
+          } else {
+            console.log("Todos los productos son: ", results);
+            resolve(results);
+          }
+        });
+      });
+    }
     
-    check(){
-      console.log('Todos las productos: ')
-      return productos;
+     new(infodb) {
+      return new Promise((resolve, reject) => {
+        const { id, producto, cantidad, precio } = infodb;
+    
+        const query = 'INSERT INTO productos (id, producto, cantidad, precio) VALUES (?, ?, ?, ?)';
+        const values = [id, producto, cantidad, precio];
+        con.query(query, values, (error, results) => {
+          if (error) {
+            console.error('Error al insertar datos:', error);
+            reject('Error al insertar datos en la base de datos');
+          } else {
+            console.log('Datos insertados correctamente');
+            resolve('Datos insertados correctamente');
+          }
+        });
+      });
     }
-  
-    new(newProduacto){
-      productos.push(newProduacto);
-      console.log("Se ha creado una nuevo cuenta y se regresara la lista de las productos: ");
-      return (productos);
+     
+    search(query) {
+      return new Promise((resolve, reject) => {
+        con.query(`SELECT * FROM productos WHERE id = '${query}'`, (error, results) => {
+          if (error) {
+            console.error('Error al ejecutar la consulta: ', error);
+            reject(error);
+          } else {
+            console.log('Resultados de la consulta: ', results);
+            resolve(results);
+          }
+        });
+      });
     }
+    
   
-  
-    search(searchID){
-      var id = + searchID;
-      var search = productos.findIndex(u => u.id == id)
-      var res = "id: " + id + " pertenece a:  " + productos[search].producto;
-      return(res);
-    }
-  
-  
-    update(searchID , newProduacto){
-      var id = + searchID;
-      var search = productos.findIndex(u => u.id == id)
-      if (search == "-1" ){
-        console.log("La id que ha colocado: " + id + "No esta en la base de datos");
-      }else if(productos[search].id == id){ 
-        console.log("La cuenta con la id:  "+ id + "sera actualizado");
-        console.log(productos[search]);
-        productos[search]= newProduacto;
-        console.log("La cuenta ha sido actualizado");
-        console.log(productos[search]);
+    
+      update(query , data){
+      return new Promise((resolve, reject) => {  
+    const { id, producto, cantidad, precio} = data;
+    const sql = `UPDATE productos SET producto = '${producto}', cantidad = '${cantidad}', precio = '${precio}' WHERE id = ${query}`;
+    con.query(sql, (error, result) => {
+      if(error){
+        console.log('Hubo un error y no se pudo actualizar los datos')
+        reject(error);
+      }else{
+        console.log('Datos actualizados exitosamente');
+        resolve(result);
       }
+    })
+  }) 
+  }
+     
+  delete(query){
+    return new Promise((resolve, reject) => {  
+  const sql = `DELETE FROM productos WHERE id = ${query}`;
+  con.query(sql, (error, result) => {
+    if(error){
+      console.log('Hubo un error y no se pudo eliminar los datos')
+      reject(error);
+    }else{
+      console.log('Datos borrados exitosamente');
+      resolve(result);
     }
-  
-    delete(searchID){
-      var id = + searchID;
-      var search = productos.findIndex(u => u.id == id)
-      if (search == "-1" ){
-        console.log("La id que ha colocado: " + id + "No esta en la base de datos");
-      }else if(productos[search].id == id){
-        console.log("La id que ha colocado: " + id + "Ha sido elimnado.");
-        productos.splice(search,1);
-      }
-    }
-  } 
-  
+  })
+  }) 
+  }
+    } 
+
   module.exports = new productosController();
