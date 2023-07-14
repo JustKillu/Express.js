@@ -1,4 +1,6 @@
+
 <!DOCTYPE html>
+
 <html>
   <head>
     <title>Administracion de Abasto</title>
@@ -10,19 +12,10 @@
     <img src="https://i.ibb.co/6Nc4Y19/Screenshot-2.png"></img>
     <h1>Abasto</h1>
     <p class="descripcion" >Bienvenidos a nuestra tienda de abasto de comida familiar. Somos una empresa local que se enfoca en proporcionar alimentos y productos básicos de alta calidad a precios competitivos para nuestros clientes. Nuestra tienda es un lugar donde puedes encontrar todo lo que necesitas para tu hogar, desde frutas y verduras frescas hasta productos enlatados y artículos de limpieza del hogar.</p>
-    
 
-  
-    <h1>Listado de clientes</h1>
-    <ul>
-      <% clientes.forEach(function(cliente) { %>
-        <li><%= cliente.nombre %></li>
-      <% }); %>
-    </ul>
     <h1 class="propietario">Propietario:</h1>
     <p>➤ Xavier Rojas</p>
     <button onclick="window.location.href='/viewproductos'">Todos los Productos</button>
-    <button onclick="window.location.href='/addclients'">Añadir Clientes</button>
 
   </body>
 </html>
