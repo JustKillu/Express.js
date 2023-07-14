@@ -3,37 +3,56 @@ var router = express.Router();
 var facturasController = require('../controllers/facturasController.js');
 
 
-router.get('/', function(req, res, next) {
-  res.send(facturasController.check());
+router.get('/', async function(req, res, next) {
+  try {
+    const resultados = await facturasController.todos();
+    res.json(resultados);
+  } catch (error) {
+    console.log(error)
+  }
+});
+
+router.post('/', async function(req, res, next) {
+  try {
+    const resultados = await facturasController.new(req.body);
+    res.json(resultados);
+  } catch (error) {
+    console.log(error)
+  }
+
 });
 
 
-router.post('/', function(req, res, next) {
- 
-  const factura = facturasController.new(req.body);
-  res.send(factura);
+router.get("/:id",async function(req, res, next) {
+  try {
+    const resultados = await facturasController.search(req.params.id);
+    res.send(resultados);
+  } catch (error) {
+    console.log(error)
+  }
 
 });
 
 
-router.get("/:fecha", function(req, res, next) {
+router.put("/:id", async function(req, res, next) {
+  try {
+    const resultados = await facturasController.update(req.params.id , req.body);
+    res.send(resultados);
+  } catch (error) {
+    console.log(error)
+  }
 
-  res.send(facturasController.search(req.params.fecha));
 
 });
 
 
-router.put("/:id", function(req, res, next) {
-
-  res.send(facturasController.update(req.params.id , req.body));
-  
-});
-
-
-router.delete("/:id", function(req, res, next) {
-
-  res.send(facturasController.delete(req.params.id));
-  
-});
+router.delete("/:id",async function(req, res, next) {
+  try {
+    const resultados = await facturasController.delete(req.params.id);
+    res.send(resultados);
+  } catch (error) {
+   console.log(error)
+  }
+})
 
 module.exports = router;

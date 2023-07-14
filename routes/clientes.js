@@ -7,7 +7,7 @@ router.get('/', async function(req, res, next) {
     const resultados = await clientesController.todos();
     res.json(resultados);
   } catch (error) {
-    // Manejar el error de alguna manera
+    console.log(error)
   }
 });
 
@@ -16,7 +16,7 @@ router.post('/', async function(req, res, next) {
     const resultados = await clientesController.new(req.body);
     res.json(resultados);
   } catch (error) {
-    // Manejar el error de alguna manera
+    console.log(error)
   }
 
 });
@@ -27,7 +27,7 @@ router.get("/:id",async function(req, res, next) {
     const resultados = await clientesController.search(req.params.id);
     res.send(resultados);
   } catch (error) {
-    // Manejar el error de alguna manera
+    console.log(error)
   }
 
 });
@@ -38,7 +38,7 @@ router.put("/:id", async function(req, res, next) {
     const resultados = await clientesController.update(req.params.id , req.body);
     res.send(resultados);
   } catch (error) {
-    // Manejar el error de alguna manera
+    console.log(error)
   }
 
   
