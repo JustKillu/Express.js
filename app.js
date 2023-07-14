@@ -4,12 +4,14 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const { clientes } = require("./models/db.js");
-const { productos } = require("./models/productosModels");
+var productosController = require('./controllers/productosController');
+const { resultados } = productosController.todos()
 
 var indexCuentas = require('./routes/cuentas');
 var indexClientes = require('./routes/clientes');
 var indexFacturas = require('./routes/facturas');
 var indexProductos = require('./routes/productos');
+var indexRepartidores = require('./routes/repartidores');
 
 var app = express();
 
@@ -20,7 +22,10 @@ app.get('/', (req, res) => {
   res.render('index', { clientes });
 });
 app.get('/viewproductos', (req, res) => {
-  res.render('viewproductos', { productos });
+  res.render('viewproductos',{ resultados: resultados } );
+});
+app.get('/addclients', (req, res) => {
+  res.render('addclients');
 });
 
 app.use(logger('dev'));
@@ -33,6 +38,7 @@ app.use('/cuentas', indexCuentas);
 app.use('/clientes', indexClientes);
 app.use('/facturas', indexFacturas);
 app.use('/productos', indexProductos);
+app.use('/repartidores', indexRepartidores);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
