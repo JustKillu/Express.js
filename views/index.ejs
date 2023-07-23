@@ -17,10 +17,10 @@
     <p>➤ Xavier Rojas</p>
     <% if (currentId.workplace === 'facturador') { %>
       <a href="/listaproductos/?accessToken=<%= token %>">
-        <button>Ir a la lista de productos</button>
+        <button>lista de productos</button>
       </a>
     <% } else { %>
-      <button onclick="alert('No tienes permiso para acceder a esta función')">Ir a la lista de productos</button>
+      <button onclick="alert('No tienes permiso para acceder a esta función')">lista de productos</button>
     <% } %>
   </body>
 </html>
