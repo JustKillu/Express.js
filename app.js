@@ -3,11 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-const bodyParser = require('body-parser');
-const info=[]
 const con = require("./models/db")
 const jwt = require('jsonwebtoken')
-const jwt_decode = require('jwt-decode');
 require('dotenv').config();
 var indexCuentas = require('./routes/cuentas');
 var indexClientes = require('./routes/clientes');
@@ -20,13 +17,41 @@ var app = express();
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
 app.get('/', ValidateToken, (req, res) => {
-  res.render('index',{ currentId:req.userId });
+  console.log(req.data)
+  res.render('index',{ currentId:req.userId, token:req.data });
 });
+
 app.get('/login', (req, res) => {
   res.render(`login`);
   
 });
+
+app.get('/listaproductos', ValidateToken,(req, res) => {
+  if (req.userId.workplace === 'facturador') {
+    // Aquí puedes mostrar la lista de productos
+    res.render('listaproductos', { token: req.query.accessToken });
+  con.query('SELECT * FROM productos', (error, results, fields) => {
+    if (error) {
+      console.error('Error al obtener los productos:', error);
+      res.status(500).send('Error al obtener los productos');
+    } else {
+      console.log('Todos los productos:', results);
+      res.render(`listaproductos`, { productos: results });
+    }
+  });
+}else{
+  res.redirect('/acceso-denegado');
+}
+  
+
+});
+
+app.get('/acceso-denegado', (req, res) => {
+  res.render('acceso-denegado');
+});
+
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -62,7 +87,7 @@ app.post('/auth', (req, res) => {
 
 
 function generateAccessToken(user){
-  return jwt.sign({user}, process.env.SECRET, {expiresIn: '1m'})
+  return jwt.sign({user}, process.env.SECRET, {expiresIn: '3m'})
 }
 
 function ValidateToken(req,res,next){
@@ -71,16 +96,20 @@ function ValidateToken(req,res,next){
 
   jwt.verify(accessToken, process.env.SECRET, ( err,user)=>{
     if(err){
-      res.send('Access Denied due token expired or incorrect')
+      res.redirect('/acceso-denegado');
     }else{
       var token = accessToken;
       const decoded = jwt.verify(token, process.env.SECRET);
       req.userId = decoded.user[0];
+      req.data = accessToken
+   
       console.log(req.userId)
       next();
     }
   })
 }
+
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -99,4 +128,5 @@ app.use(function (err, req, res, next) {
 });
 
 module.exports = app;
+
 console.log("Server is running!!");
