@@ -20,31 +20,31 @@ app.set('view engine', 'ejs');
 
 app.get('/', ValidateToken, (req, res) => {
   console.log(req.data)
-  res.render('index',{ currentId:req.userId, token:req.data });
+  res.render('index', { currentId: req.userId, token: req.data });
 });
 
 app.get('/login', (req, res) => {
   res.render(`login`);
-  
+
 });
 
-app.get('/listaproductos', ValidateToken,(req, res) => {
+app.get('/listaproductos', ValidateToken, (req, res) => {
   if (req.userId.workplace === 'facturador') {
-    // Aquí puedes mostrar la lista de productos
+
     res.render('listaproductos', { token: req.query.accessToken });
-  con.query('SELECT * FROM productos', (error, results, fields) => {
-    if (error) {
-      console.error('Error al obtener los productos:', error);
-      res.status(500).send('Error al obtener los productos');
-    } else {
-      console.log('Todos los productos:', results);
-      res.render(`listaproductos`, { productos: results });
-    }
-  });
-}else{
-  res.redirect('/acceso-denegado');
-}
-  
+    con.query('SELECT * FROM productos', (error, results, fields) => {
+      if (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).send('Error al obtener los productos');
+      } else {
+        console.log('Todos los productos:', results);
+        res.render(`listaproductos`, { productos: results });
+      }
+    });
+  } else {
+    res.redirect('/acceso-denegado');
+  }
+
 
 });
 
@@ -74,11 +74,11 @@ app.post('/auth', (req, res) => {
     if (error) {
       console.error('Error al ejecutar la consulta: ', error);
       res.send(error);
-    }else{
+    } else {
 
       const accessToken = generateAccessToken(results);
-      res.header('authorization',accessToken).json({
-        message:'Usuario autentificado',
+      res.header('authorization', accessToken).json({
+        message: 'Usuario autentificado',
         token: accessToken,
       })
     }
@@ -86,23 +86,23 @@ app.post('/auth', (req, res) => {
 });
 
 
-function generateAccessToken(user){
-  return jwt.sign({user}, process.env.SECRET, {expiresIn: '3m'})
+function generateAccessToken(user) {
+  return jwt.sign({ user }, process.env.SECRET, { expiresIn: '3m' })
 }
 
-function ValidateToken(req,res,next){
+function ValidateToken(req, res, next) {
   const accessToken = req.header['authorization'] || req.query.accessToken
-  if(!accessToken) res.send('Access Denied')
+  if (!accessToken) res.send('Access Denied')
 
-  jwt.verify(accessToken, process.env.SECRET, ( err,user)=>{
-    if(err){
+  jwt.verify(accessToken, process.env.SECRET, (err, user) => {
+    if (err) {
       res.redirect('/acceso-denegado');
-    }else{
+    } else {
       var token = accessToken;
       const decoded = jwt.verify(token, process.env.SECRET);
       req.userId = decoded.user[0];
       req.data = accessToken
-   
+
       console.log(req.userId)
       next();
     }
