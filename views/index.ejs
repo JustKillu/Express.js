@@ -12,10 +12,14 @@
     <img src="https://i.ibb.co/6Nc4Y19/Screenshot-2.png"></img>
     <h1>Abasto</h1>
     <p class="descripcion" >Bienvenidos a nuestra tienda de abasto de comida familiar. Somos una empresa local que se enfoca en proporcionar alimentos y productos básicos de alta calidad a precios competitivos para nuestros clientes. Nuestra tienda es un lugar donde puedes encontrar todo lo que necesitas para tu hogar, desde frutas y verduras frescas hasta productos enlatados y artículos de limpieza del hogar.</p>
-
+    <h1>Bienvenido, <%= currentId.username %>!</h1>
     <h1 class="propietario">Propietario:</h1>
     <p>➤ Xavier Rojas</p>
-    <button onclick="window.location.href='/viewproductos'">Todos los Productos</button>
-
+    <% if (currentId.workplace === 'facturador') { %>
+      <button>Habilitado</button>
+    <% } else { %>
+      <button disabled>Deshabilitado</button>
+    <% } %>
+    
   </body>
 </html>
