@@ -16,10 +16,11 @@
     <h1 class="propietario">Propietario:</h1>
     <p>➤ Xavier Rojas</p>
     <% if (currentId.workplace === 'facturador') { %>
-      <button>Habilitado</button>
+      <a href="/listaproductos/?accessToken=<%= token %>">
+        <button>Ir a la lista de productos</button>
+      </a>
     <% } else { %>
-      <button disabled>Deshabilitado</button>
+      <button onclick="alert('No tienes permiso para acceder a esta función')">Ir a la lista de productos</button>
     <% } %>
-    
   </body>
 </html>
