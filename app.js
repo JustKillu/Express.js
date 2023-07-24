@@ -71,8 +71,8 @@ app.post('/auth', (req, res) => {
   con.query(`SELECT * FROM trabajadores WHERE username = '${user}' AND password='${pass}'`, (error, results) => {
     if (error) {
       console.error('Error al ejecutar la consulta: ', error);
-      res.send(error);
-    } else {
+      res.redirect('/acceso-denegado');
+    }else {
 
       const accessToken = generateAccessToken(results);
       res.header('authorization', accessToken).json({
