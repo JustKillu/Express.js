@@ -22,7 +22,7 @@ function ValidateToken(req, res, next) {
   }
 }
 
-router.get('/', async function(req, res, next) {
+router.get('/', ValidateToken, async function(req, res, next) {
   const data = req.data; 
   switch(data.workplace){
     case 'facturador':
@@ -36,7 +36,7 @@ router.get('/', async function(req, res, next) {
   }
 });
 
-router.post('/', async function(req, res, next) {
+router.post('/', ValidateToken,async function(req, res, next) {
   const data = req.data; 
   switch(data.workplace){
     case 'facturador':
@@ -51,7 +51,7 @@ router.post('/', async function(req, res, next) {
 });
 
 
-router.get("/:id",async function(req, res, next) {
+router.get("/:id", ValidateToken,async function(req, res, next) {
   const data = req.data; 
   switch(data.workplace){
     case 'facturador':
@@ -66,7 +66,7 @@ router.get("/:id",async function(req, res, next) {
 });
 
 
-router.put("/:id", async function(req, res, next) {
+router.put("/:id", ValidateToken,async function(req, res, next) {
   const data = req.data; 
   switch(data.workplace){
     case 'facturador':
@@ -81,7 +81,7 @@ router.put("/:id", async function(req, res, next) {
 });
 
 
-router.delete("/:id",async function(req, res, next) {
+router.delete("/:id", ValidateToken,async function(req, res, next) {
   const data = req.data; 
   switch(data.workplace){
     case 'facturador':

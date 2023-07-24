@@ -30,8 +30,6 @@ app.get('/login', (req, res) => {
 
 app.get('/listaproductos', ValidateToken, (req, res) => {
   if (req.userId.workplace === 'facturador') {
-
-    res.render('listaproductos', { token: req.query.accessToken });
     con.query('SELECT * FROM productos', (error, results, fields) => {
       if (error) {
         console.error('Error al obtener los productos:', error);
