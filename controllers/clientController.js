@@ -66,19 +66,19 @@ class clientesController {
 }) 
 }
    
-delete(query){
-  return new Promise((resolve, reject) => {  
-const sql = `DELETE FROM clientes WHERE id = ${query}`;
-con.query(sql, (error, result) => {
-  if(error){
-    console.log('Hubo un error y no se pudo eliminar los datos')
-    reject(error);
-  }else{
-    console.log('Datos borrados exitosamente');
-    resolve(result);
-  }
-})
-}) 
+delete(query) {
+  return new Promise((resolve, reject) => {
+    const sql = `DELETE FROM clientes WHERE id = ${query}`;
+    con.query(sql, (error, result) => {
+      if (error) {
+        console.log('Hubo un error y no se pudo eliminar los datos');
+        reject(error);
+      } else {
+        console.log('Datos borrados exitosamente');
+        resolve(result);
+      }
+    });
+  });
 }
   } 
   

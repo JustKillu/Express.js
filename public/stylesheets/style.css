@@ -6,6 +6,21 @@ body {
 .propietario,p {
   text-align: right;
 }
+.bienvenido {
+  overflow: auto; 
+}
+
+#abasto {
+  float: left; 
+  text-align: left; 
+}
+
+#username {
+  float: right;
+  text-align: right; 
+  text-transform: capitalize;
+}
+
 .descripcion{
   text-align:center;
 }

@@ -1,0 +1,44 @@
+[
+{"type":"header","version":"5.2.1","comment":"Export to JSON plugin for PHPMyAdmin"},
+{"type":"database","name":"abasto"},
+{"type":"table","name":"clientes","database":"abasto","data":
+[
+{"id":"1","Nombre":"1231","Apellido":"2312312","Pais":"312"},
+{"id":"2","Nombre":"Xavier","Apellido":"Vargas","Pais":"Venezuelaa"},
+{"id":"4","Nombre":"Roberto","Apellido":"1231","Pais":"1312"},
+{"id":"5","Nombre":"Pedro","Apellido":"Sanchez","Pais":"Mexico"},
+{"id":"10","Nombre":"123","Apellido":"123","Pais":"123"}
+]
+}
+,{"type":"table","name":"cuentas","database":"abasto","data":
+[
+{"id":"6","acreditador":"Kiita","saldo":"2b","estado":"pasivos"},
+{"id":"7","acreditador":"Pablo","saldo":"10000","estado":"activos"}
+]
+}
+,{"type":"table","name":"facturas","database":"abasto","data":
+[
+{"id":"1","nombre":"Paola","motivo":"Compra de material pesado","fecha":"13-7-2023","valor":"50k bs"},
+{"id":"4","nombre":"Xavier","motivo":"Compra de pasto","fecha":"31-07-2023","valor":"50k"}
+]
+}
+,{"type":"table","name":"productos","database":"abasto","data":
+[
+{"id":"3","producto":"Queso","cantidad":"11kg","precio":"215bs"},
+{"id":"6","producto":"Sal","cantidad":"10kg","precio":"300bs"},
+{"id":"9","producto":"Mantequilla","cantidad":"200gr","precio":"25"}
+]
+}
+,{"type":"table","name":"repartidores","database":"abasto","data":
+[
+{"id":"1","nombre":"Jaime","apellido":"Altozano","vehiculo":"Carro","sector":"Sandiego"},
+{"id":"3","nombre":"Francisco","apellido":"Armando","vehiculo":"Moto no tan rapida","sector":"El cobre"}
+]
+}
+,{"type":"table","name":"trabajadores","database":"abasto","data":
+[
+{"id":"1","username":"xavier","password":"12345","workplace":"contador"},
+{"id":"2","username":"maria","password":"12345","workplace":"facturador"}
+]
+}
+]
