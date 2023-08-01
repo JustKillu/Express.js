@@ -11,8 +11,13 @@ var indexClientes = require('./routes/clientes');
 var indexFacturas = require('./routes/facturas');
 var indexProductos = require('./routes/productos');
 var indexRepartidores = require('./routes/repartidores');
+const fs = require('fs');
 var app = express();
-
+const cProducto = require('./controllers/productosController');
+const cCliente = require('./controllers/clientController');
+const cFacturas = require('./controllers/facturasController');
+const cCuentas = require('./controllers/cuentasController');
+const cRepartidores = require('./controllers/repartidoresController');
 // view engine setup
 
 app.set('views', path.join(__dirname, 'views'));
@@ -35,16 +40,86 @@ app.get('/listaproductos', ValidateToken, (req, res) => {
         console.error('Error al obtener los productos:', error);
         res.status(500).send('Error al obtener los productos');
       } else {
-        console.log('Todos los productos:', results);
-        res.render(`listaproductos`, { productos: results });
+        
+        res.render(`listaproductos`, { productos: results, token: req.data });
       }
     });
   } else {
     res.redirect('/acceso-denegado');
   }
-
-
 });
+
+app.get('/listaclients', ValidateToken, (req, res) => {
+  if (req.userId.workplace === 'contador') {
+    con.query('SELECT * FROM clientes', (error, results, fields) => {
+      if (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).send('Error al obtener los productos');
+      } else {
+        
+        res.render(`listaclients`, { clientes: results, token: req.data });
+      }
+    });
+  } else {
+    res.redirect('/acceso-denegado');
+  }
+});
+
+app.get('/listafacturas', ValidateToken, (req, res) => {
+  if (req.userId.workplace === 'facturador') {
+    con.query('SELECT * FROM facturas', (error, results, fields) => {
+      if (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).send('Error al obtener los productos');
+      } else {
+        
+        res.render(`listafacturas`, { facturas: results, token: req.data });
+      }
+    });
+  } else {
+    res.redirect('/acceso-denegado');
+  }
+});
+
+app.get('/edit',(req, res) => {
+  const tipo = req.query.tipo;
+  const id = req.query.id;
+  console.log(tipo,id)
+  res.render('edit', { tipo, id, token: req.query.accessToken });
+});
+
+app.get('/listacuentas', ValidateToken, (req, res) => {
+  if (req.userId.workplace === 'contador') {
+    con.query('SELECT * FROM cuentas', (error, results, fields) => {
+      if (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).send('Error al obtener los productos');
+      } else {
+        
+        res.render(`listacuentas`, { cuentas: results, token: req.data });
+      }
+    });
+  } else {
+    res.redirect('/acceso-denegado');
+  }
+});
+
+app.get('/listarepartidores', ValidateToken, (req, res) => {
+  if (req.userId.workplace === 'facturador') {
+    con.query('SELECT * FROM repartidores', (error, results, fields) => {
+      if (error) {
+        console.error('Error al obtener los productos:', error);
+        res.status(500).send('Error al obtener los productos');
+      } else {
+        
+        res.render(`listarepartidores`, { repartidor: results, token: req.data });
+      }
+    });
+  } else {
+    res.redirect('/acceso-denegado');
+  }
+});
+
 
 app.get('/acceso-denegado', (req, res) => {
   res.render('acceso-denegado');
@@ -63,29 +138,234 @@ app.use('/facturas', indexFacturas);
 app.use('/productos', indexProductos);
 app.use('/repartidores', indexRepartidores);
 
+app.get('/initialize-database', (req, res) => {
+  
+});
 
 app.post('/auth', (req, res) => {
-  const { username, password } = req.body
-  const user = username
-  const pass = password
+  const { username, password } = req.body;
+  const user = username;
+  const pass = password;
+  
   con.query(`SELECT * FROM trabajadores WHERE username = '${user}' AND password='${pass}'`, (error, results) => {
     if (error) {
       console.error('Error al ejecutar la consulta: ', error);
       res.redirect('/acceso-denegado');
-    }else {
-
-      const accessToken = generateAccessToken(results);
-      res.header('authorization', accessToken).json({
-        message: 'Usuario autentificado',
-        token: accessToken,
-      })
+    } else {
+      if (results.length === 0) {
+        res.status(401).json({
+          message: 'Usuario no encontrado',
+        });
+      } else {
+        const accessToken = generateAccessToken(results);
+        res.header('authorization', accessToken).json({
+          message: 'Usuario autentificado',
+          token: accessToken,
+        });
+      }
     }
+  });
+});
+
+//////// Productos ////////////
+
+app.post('/deleteproducto/:id', ValidateToken,(req, res) => {
+  const id = req.params.id;
+  cProducto.delete(id)
+    .then(() => {
+      res.send('Datos borrados exitosamente');
+    })
+    .catch((error) => {
+      res.status(500).send('Hubo un error y no se pudo eliminar los datos');
+      console.log(error)
+    });
+});
+
+app.post('/addproducto',ValidateToken, (req, res) => {
+  cProducto.new(req.body)
+    .then(() => {
+      res.send('Datos añadidos exitosamente');
+    })
+    .catch((error) => {
+      res.status(500).send('Hubo un error y no se pudo añadir los datos');
+      console.log(error)
+    });
+});
+
+
+//////// Clientes ////////////
+app.post('/deletecliente/:id', ValidateToken,(req, res) => {
+  const id = req.params.id;
+  cCliente.delete(id)
+    .then(() => {
+      res.send('Datos borrados exitosamente');
+    })
+    .catch((error) => {
+      res.status(500).send('Hubo un error y no se pudo eliminar los datos');
+      console.log(error)
+    });
+});
+
+app.post('/addcliente', ValidateToken,(req, res) => {
+  cCliente.new(req.body)
+    .then(() => {
+      res.send('Datos añadidos exitosamente');
+    })
+    .catch((error) => {
+      res.status(500).send('Hubo un error y no se pudo añadir los datos');
+      console.log(error)
+    });
+});
+
+
+///////// Cuentas ////////////
+
+app.post('/deletecuentas/:id',ValidateToken, (req, res) => {
+  const id = req.params.id;
+  cCuentas.delete(id)
+    .then(() => {
+      res.send('Datos borrados exitosamente');
+    })
+    .catch((error) => {
+      res.status(500).send('Hubo un error y no se pudo eliminar los datos');
+      console.log(error)
+    });
+});
+
+app.post('/addcuentas',ValidateToken, (req, res) => {
+  cCuentas.new(req.body)
+    .then(() => {
+      res.send('Datos añadidos exitosamente');
+    })
+    .catch((error) => {
+      res.status(500).send('Hubo un error y no se pudo añadir los datos');
+      console.log(error)
+    });
+});
+
+///////// Facturas ////////////
+
+app.post('/deletefacturas/:id', ValidateToken,(req, res) => {
+  const id = req.params.id;
+  cFacturas.delete(id)
+    .then(() => {
+      res.send('Datos borrados exitosamente');
+    })
+    .catch((error) => {
+      res.status(500).send('Hubo un error y no se pudo eliminar los datos');
+      console.log(error)
+    });
+});
+
+app.post('/addfacturas', ValidateToken,(req, res) => {
+  cFacturas.new(req.body)
+    .then(() => {
+      res.send('Datos añadidos exitosamente');
+    })
+    .catch((error) => {
+      res.status(500).send('Hubo un error y no se pudo añadir los datos');
+      console.log(error)
+    });
+});
+
+///////// Repartidores ////////////
+
+app.post('/deleterepartidores/:id',ValidateToken, (req, res) => {
+  const id = req.params.id;
+  cRepartidores.delete(id)
+    .then(() => {
+      res.send('Datos borrados exitosamente');
+    })
+    .catch((error) => {
+      res.status(500).send('Hubo un error y no se pudo eliminar los datos');
+      console.log(error)
+    });
+});
+
+app.post('/addrepartidores',ValidateToken, (req, res) => {
+  cRepartidores.new(req.body)
+    .then(() => {
+      res.send('Datos añadidos exitosamente');
+    })
+    .catch((error) => {
+      res.status(500).send('Hubo un error y no se pudo añadir los datos');
+      console.log(error)
+    });
+});
+
+////// editcuenta /////////
+app.post('/editcuenta/:id', ValidateToken,(req, res) => {
+  const id = req.params.id;
+  cCuentas.update(id , req.body)
+  .then(() => {
+    res.send('Datos añadidos exitosamente');
+  })
+  .catch((error) => {
+    res.status(500).send('Hubo un error y no se pudo añadir los datos');
+    console.log(error)
+  });
+});
+
+
+///// editcliente /////
+
+app.post('/editclientes/:id', ValidateToken,(req, res) => {
+  const id = req.params.id;
+  cCliente.update(id , req.body)
+  .then(() => {
+    res.send('Datos añadidos exitosamente');
+  })
+  .catch((error) => {
+    res.status(500).send('Hubo un error y no se pudo añadir los datos');
+    console.log(error)
+  });
+});
+
+///// editproductos /////
+
+app.post('/editproductos/:id', ValidateToken,(req, res) => {
+  const id = req.params.id;
+  cProducto.update(id , req.body)
+  .then(() => {
+    res.send('Datos añadidos exitosamente');
+  })
+  .catch((error) => {
+    res.status(500).send('Hubo un error y no se pudo añadir los datos');
+    console.log(error)
+  });
+});
+
+///// editfacturas /////
+
+app.post('/editfacturas/:id', ValidateToken,(req, res) => {
+  const id = req.params.id;
+  cFacturas.update(id , req.body)
+  .then(() => {
+    res.send('Datos añadidos exitosamente');
+  })
+  .catch((error) => {
+    res.status(500).send('Hubo un error y no se pudo añadir los datos');
+    console.log(error)
+  });
+});
+
+///// editfacturas /////
+
+app.post('/editrepartidores/:id', ValidateToken,(req, res) => {
+  const id = req.params.id;
+  cRepartidores.update(id , req.body)
+  .then(() => {
+    res.send('Datos añadidos exitosamente');
+  })
+  .catch((error) => {
+    res.status(500).send('Hubo un error y no se pudo añadir los datos');
+    console.log(error)
   });
 });
 
 
 function generateAccessToken(user) {
-  return jwt.sign({ user }, process.env.SECRET, { expiresIn: '3m' })
+  return jwt.sign({ user }, process.env.SECRET, { expiresIn: '10m' })
 }
 
 function ValidateToken(req, res, next) {
