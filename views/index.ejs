@@ -6,21 +6,67 @@
     <title>Administracion de Abasto</title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel="icon" href="https://i.ibb.co/kXMPtKN/Screenshot-1.png" type="png" size=20px>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+ 
   </head>
   <body>
     
     <img src="https://i.ibb.co/6Nc4Y19/Screenshot-2.png"></img>
-    <h1>Abasto</h1>
+    <div class="bienvenido">
+      <h1 id="abasto">Abasto</h1>
+      <h1 id="username">Bienvenido <%= currentId.username %>!</h1>
+    </div>
+  
+  
     <p class="descripcion" >Bienvenidos a nuestra tienda de abasto de comida familiar. Somos una empresa local que se enfoca en proporcionar alimentos y productos básicos de alta calidad a precios competitivos para nuestros clientes. Nuestra tienda es un lugar donde puedes encontrar todo lo que necesitas para tu hogar, desde frutas y verduras frescas hasta productos enlatados y artículos de limpieza del hogar.</p>
-    <h1>Bienvenido, <%= currentId.username %>!</h1>
+ 
     <h1 class="propietario">Propietario:</h1>
     <p>➤ Xavier Rojas</p>
-    <% if (currentId.workplace === 'facturador') { %>
-      <a href="/listaproductos/?accessToken=<%= token %>">
-        <button>lista de productos</button>
+    <div>
+      <% if (currentId.workplace === 'facturador') { %>
+        <a href="/listaproductos/?accessToken=<%= token %>">
+          <button class="btn btn-primary">Productos</button>
+        </a>
+      <% } else { %>
+        <button onclick="alert('No tienes permiso para acceder a esta función')" class="btn btn-secondary">Productos</button>
+      <% } %>
+   
+    <% if (currentId.workplace === 'contador') { %>
+      <a href="/listaclients/?accessToken=<%= token %>">
+        <button class="btn btn-primary" >Clientes</button>
       </a>
     <% } else { %>
-      <button onclick="alert('No tienes permiso para acceder a esta función')">lista de productos</button>
+      <button onclick="alert('No tienes permiso para acceder a esta función')"class="btn btn-secondary">Clientes</button>
     <% } %>
+
+    <% if (currentId.workplace === 'contador') { %>
+      <a href="/listacuentas/?accessToken=<%= token %>">
+        <button class="btn btn-primary">Cuentas</button>
+      </a>
+    <% } else { %>
+      <button onclick="alert('No tienes permiso para acceder a esta función')" class="btn btn-secondary">Cuentas</button>
+    <% } %>
+
+
+    
+    <% if (currentId.workplace === 'facturador') { %>
+      <a href="/listafacturas/?accessToken=<%= token %>">
+        <button class="btn btn-primary">Facturas</button>
+      </a>
+    <% } else { %>
+      <button onclick="alert('No tienes permiso para acceder a esta función')" class="btn btn-secondary" >Facturas</button>
+    <% } %>
+
+        
+    <% if (currentId.workplace === 'facturador') { %>
+      <a href="/listarepartidores/?accessToken=<%= token %>">
+        <button class="btn btn-primary">Repartidores</button>
+      </a>
+    <% } else { %>
+      <button onclick="alert('No tienes permiso para acceder a esta función')" class="btn btn-secondary" >Repartidores</button>
+    <% } %>
+  </div>
   </body>
+  
 </html>

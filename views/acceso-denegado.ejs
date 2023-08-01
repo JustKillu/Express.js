@@ -16,5 +16,12 @@
 <body>
   <h1>Acceso Denegado</h1>
   <p>No tienes permiso para acceder a esta página.</p>
+  <button onclick="redirectToLogin()">Iniciar sesión</button>
+
+  <script>
+    function redirectToLogin() {
+      window.location.href = "/login";
+    }
+  </script>
 </body>
 </html>
